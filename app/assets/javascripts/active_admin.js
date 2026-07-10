@@ -1,0 +1,2 @@
+// Active Admin JavaScript is loaded automatically via active_admin/base.js
+// You can add custom JavaScript for your admin interface here.
