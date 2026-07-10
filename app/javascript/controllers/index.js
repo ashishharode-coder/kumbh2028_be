@@ -6,3 +6,10 @@ import { application } from "./application"
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+
+// import TableController from "./table_controller"
+// application.register("table", TableController)
+
+// import TooltipController from "./tooltip_controller"
+// application.register("tooltip", TooltipController)
