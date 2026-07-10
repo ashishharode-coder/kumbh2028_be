@@ -1,22 +1,3 @@
-# module Authenticatable
-#   extend ActiveSupport::Concern
-
-#   private
-
-#   def sign_in(record, scope)
-#     session["#{scope}_id"] = record.id
-#   end
-
-#   def sign_out(scope)
-#     session.delete("#{scope}_id")
-#   end
-
-#   def current_record(scope, model)
-#     model.find_by(id: session["#{scope}_id"])
-#   end
-# end
-
-
 module Authenticatable
   extend ActiveSupport::Concern
 

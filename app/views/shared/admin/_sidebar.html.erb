@@ -1,0 +1,27 @@
+<aside class="w-72 min-h-screen bg-slate-900 text-white">
+
+  <div class="p-6 text-xl font-bold border-b border-slate-700">
+    Dashboard
+  </div>
+
+  <nav class="mt-4">
+
+    <%= link_to "🏠 Dashboard",
+        admin_root_path,
+        class: "block px-6 py-3 hover:bg-slate-800" %>
+
+    <%= link_to "📰 Posts",
+        admin_posts_path,
+        class: "block px-6 py-3 hover:bg-slate-800" %>
+
+    <%= link_to "👥 Users",
+        "",
+        class: "block px-6 py-3 hover:bg-slate-800" %>
+
+    <%= link_to "🏨 Vendors",
+        "",
+        class: "block px-6 py-3 hover:bg-slate-800" %>
+
+  </nav>
+
+</aside>

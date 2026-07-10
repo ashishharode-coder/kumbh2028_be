@@ -1,39 +1,26 @@
 module Authentication
   extend ActiveSupport::Concern
 
-  # included do
-  #   before_action :require_authentication
-  #   helper_method :authenticated?
-  # end
+  included do
+    before_action :resume_session
+    helper_method :current_actor, :signed_in?
+  end
 
   private
 
   def resume_session
-    token = cookies.signed[:session_token]
-
-    return if token.blank?
-
-    session = Session.active.find_by(token: token)
-
-    return unless session
-
-    Current.session = session
-    Current.actor = session.authenticatable
-
-    session.update_column(:last_seen_at, Time.current)
+    SessionManager.resume(cookies: cookies)
   end
 
   def current_actor
-    Current.actor
+    Current.authenticatable
   end
 
   def signed_in?
-    Current.actor.present?
+    Current.authenticatable.present?
   end
 
   def require_authentication
-    return if signed_in?
-
-    redirect_to new_admin_session_path
+    redirect_to new_admin_session_path unless signed_in?
   end
 end

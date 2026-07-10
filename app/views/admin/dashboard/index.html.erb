@@ -1,0 +1,27 @@
+<h1 class="text-3xl font-bold mb-6">
+  Kumbh2028 Dashboard
+</h1>
+
+<div class="grid grid-cols-4 gap-6">
+
+  <div class="rounded-lg bg-white shadow p-6">
+    <h2 class="text-gray-500">Users</h2>
+    <p class="text-3xl font-bold"><%= @stats[:users] %></p>
+  </div>
+
+  <div class="rounded-lg bg-white shadow p-6">
+    <h2 class="text-gray-500">Posts</h2>
+    <p class="text-3xl font-bold"><%= @stats[:posts] %></p>
+  </div>
+
+  <div class="rounded-lg bg-white shadow p-6">
+    <h2 class="text-gray-500">Vendors</h2>
+    <p class="text-3xl font-bold"><%= @stats[:vendors] %></p>
+  </div>
+
+  <div class="rounded-lg bg-white shadow p-6">
+    <h2 class="text-gray-500">Bookings</h2>
+    <p class="text-3xl font-bold"><%= @stats[:bookings] %></p>
+  </div>
+
+</div>

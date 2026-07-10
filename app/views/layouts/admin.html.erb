@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kumbh2028 Admin</title>
+
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= javascript_include_tag "application", defer: true %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+</head>
+
+<body class="bg-gray-100">
+
+  <%= render "shared/admin/header" %>
+
+  <div class="flex">
+    <%= render "shared/admin/sidebar" %>
+
+    <main class="flex-1 p-8">
+      <%= yield %>
+    </main>
+  </div>
+
+</body>
+</html>
