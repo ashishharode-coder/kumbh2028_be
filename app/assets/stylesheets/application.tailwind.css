@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+/* Tell Tailwind where your templates are */
+@source "../../views";
+@source "../../helpers";
+@source "../../javascript";
+@source "../../../app/components";

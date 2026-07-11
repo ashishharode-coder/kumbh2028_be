@@ -1,29 +1,71 @@
-<div class="min-h-screen flex items-center justify-center">
 
-  <div class="w-full max-w-md bg-white shadow rounded-lg p-8">
 
-    <h1 class="text-3xl font-bold mb-8">
-      Super Admin Login
-    </h1>
 
-    <%= form_with url: admin_session_path do |f| %>
 
-      <div class="mb-4">
-        <%= f.email_field :email,
-          class: "w-full border rounded px-4 py-2",
-          placeholder: "Email" %>
+<div class="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center px-4">
+
+  <div class="w-full max-w-md">
+
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-orange-100 shadow">
+        <span class="text-4xl">🕉</span>
       </div>
 
-      <div class="mb-6">
-        <%= f.password_field :password,
-          class: "w-full border rounded px-4 py-2",
-          placeholder: "Password" %>
-      </div>
+      <h1 class="text-4xl font-bold text-orange-600">
+        Kumbh2028
+      </h1>
 
-      <%= f.submit "Login",
-        class: "w-full bg-blue-600 text-white py-2 rounded" %>
+      <p class="mt-2 text-gray-600">
+        Super Admin Portal
+      </p>
+    </div>
 
-    <% end %>
+    <!-- Login Card -->
+    <div class="rounded-2xl bg-white shadow-2xl border border-orange-100 p-8">
+
+      <% if flash[:alert].present? %>
+        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <%= form_with url: admin_session_path, local: true, data: { turbo: false }  do |f| %>
+
+        <div class="mb-5">
+          <%= f.label :email,
+                class: "mb-2 block text-sm font-semibold text-gray-700" %>
+
+          <%= f.email_field :email,
+                autofocus: true,
+                required: true,
+                autocomplete: "email",
+                placeholder: "Enter your email",
+                class: "w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition" %>
+        </div>
+
+        <div class="mb-6">
+          <%= f.label :password,
+                class: "mb-2 block text-sm font-semibold text-gray-700" %>
+
+          <%= f.password_field :password,
+                required: true,
+                autocomplete: "current-password",
+                placeholder: "Enter your password",
+                class: "w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition" %>
+        </div>
+
+        <%= f.submit "Sign In",
+              class: "w-full rounded-lg bg-orange-600 py-3 text-lg font-semibold text-white transition hover:bg-orange-700" %>
+
+      <% end %>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-8 text-center text-sm text-gray-500">
+      © <%= Date.current.year %> Kumbh2028. All Rights Reserved.
+    </div>
 
   </div>
 

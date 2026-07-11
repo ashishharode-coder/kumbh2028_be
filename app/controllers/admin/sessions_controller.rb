@@ -1,6 +1,6 @@
 module Admin
   class SessionsController < ActionController::Base
-    # layout "admin"
+    layout "admin"
 
     def new
     end
