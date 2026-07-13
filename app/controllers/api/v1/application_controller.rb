@@ -1,6 +1,10 @@
 module Api
   module V1
     class ApplicationController < ActionController::API
+      include ApiResponse
+      include ApiValidation
+      include ApiExceptionHandler
+
       before_action :authenticate_user!
 
       private
@@ -11,7 +15,12 @@ module Api
         @current_user =
           Api::ApiSessionManager.authenticate(token)
 
-        render_unauthorized unless @current_user
+        return if @current_user
+
+        failure(
+          message: "Unauthorized",
+          status: :unauthorized
+        )
       end
 
       def current_user
@@ -20,13 +29,6 @@ module Api
 
       def bearer_token
         request.authorization.to_s.split.last
-      end
-
-      def render_unauthorized
-        render json: {
-          success: false,
-          message: "Unauthorized"
-        }, status: :unauthorized
       end
     end
   end

@@ -1,27 +1,123 @@
-<h1 class="text-3xl font-bold mb-6">
-  Kumbh2028 Dashboard
-</h1>
+<div class="space-y-8">
 
-<div class="grid grid-cols-4 gap-6">
+  <h1 class="text-3xl font-bold">
+    Dashboard
+  </h1>
 
-  <div class="rounded-lg bg-white shadow p-6">
-    <h2 class="text-gray-500">Users</h2>
-    <p class="text-3xl font-bold"><%= @stats[:users] %></p>
+  <div class="grid grid-cols-3 gap-6">
+
+    <%= render "stat_card",
+          title: "Users",
+          value: @dashboard[:users][:total] %>
+
+    <%= render "stat_card",
+          title: "Active Sessions",
+          value: @dashboard[:sessions][:active] %>
+
+    <%= render "stat_card",
+          title: "OTP Today",
+          value: @dashboard[:otps][:today] %>
+
+    <%= render "stat_card",
+          title: "Today's Logins",
+          value: @dashboard[:sessions][:today] %>
+
+    <%= render "stat_card",
+          title: "Blocked Users",
+          value: @dashboard[:users][:blocked] %>
+
+    <%= render "stat_card",
+          title: "New Users",
+          value: @dashboard[:users][:today] %>
+
   </div>
 
-  <div class="rounded-lg bg-white shadow p-6">
-    <h2 class="text-gray-500">Posts</h2>
-    <p class="text-3xl font-bold"><%= @stats[:posts] %></p>
-  </div>
+</div>
 
-  <div class="rounded-lg bg-white shadow p-6">
-    <h2 class="text-gray-500">Vendors</h2>
-    <p class="text-3xl font-bold"><%= @stats[:vendors] %></p>
-  </div>
+<div class="rounded-xl bg-white shadow p-6">
 
-  <div class="rounded-lg bg-white shadow p-6">
-    <h2 class="text-gray-500">Bookings</h2>
-    <p class="text-3xl font-bold"><%= @stats[:bookings] %></p>
-  </div>
+  <h2 class="text-xl font-semibold mb-5">
+    Recent Users
+  </h2>
+
+  <table class="w-full">
+
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Joined</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <% @dashboard[:users][:recent].each do |user| %>
+
+        <tr>
+
+          <td>
+            <%= link_to user.name,
+                        admin_user_path(user),
+                        class: "text-orange-600 hover:underline" %>
+          </td>
+
+          <td><%= user.phone %></td>
+
+          <td><%= time_ago_in_words(user.created_at) %> ago</td>
+
+        </tr>
+
+      <% end %>
+
+    </tbody>
+
+  </table>
+
+</div>
+
+
+<div class="rounded-xl bg-white shadow p-6 mt-6">
+
+  <h2 class="text-xl font-semibold mb-5">
+    Recent Login Sessions
+  </h2>
+
+  <table class="w-full">
+
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Platform</th>
+        <th>Device</th>
+        <th>Last Seen</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <% @dashboard[:sessions][:recent].each do |session| %>
+
+        <tr>
+
+          <td>
+            <%= link_to session.user.name,
+                        admin_user_path(session.user),
+                        class: "text-orange-600 hover:underline" %>
+          </td>
+
+          <td><%= session.platform %></td>
+
+          <td><%= session.device_name %></td>
+
+          <td><%= time_ago_in_words(session.last_seen_at) %> ago</td>
+
+        </tr>
+
+      <% end %>
+
+    </tbody>
+
+  </table>
 
 </div>

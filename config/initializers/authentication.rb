@@ -1,0 +1,7 @@
+OTP_EXPIRY = 5.minutes
+
+OTP_ATTEMPTS = 5
+
+OTP_RESEND_AFTER = 60.seconds
+
+API_SESSION_EXPIRY = 30.days

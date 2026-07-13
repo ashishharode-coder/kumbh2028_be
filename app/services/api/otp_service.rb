@@ -1,8 +1,16 @@
 module Api
   class OtpService
-    OTP_EXPIRY = 5.minutes
-
     def self.generate_for(user)
+
+      recent_otps = user.otps.where(
+        "created_at > ?",
+        15.minutes.ago
+      )
+
+      if recent_otps.count >= 3
+        raise Api::TooManyOtpRequestsError
+      end
+
       # Invalidate previous active OTPs
       user.otps.active.update_all(
         verified_at: Time.current

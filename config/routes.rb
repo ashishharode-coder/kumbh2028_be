@@ -3,7 +3,15 @@ Rails.application.routes.draw do
   namespace :admin do
     root "dashboard#index"
     resources :posts
-    resources :users
+    resources :users do
+      member do
+        patch :block
+        patch :unblock
+        delete :logout_everywhere
+      end
+      delete :logout_session,
+           on: :member
+    end
     resource :session,
              only: %i[new create destroy]
 
@@ -13,6 +21,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :auth do
         post :send_otp
+        post :resend_otp
         post :verify_otp
       end
 

@@ -7,7 +7,7 @@ class SessionManager
         ip_address: request.remote_ip,
         user_agent: request.user_agent,
         last_seen_at: Time.current,
-        expires_at: 30.days.from_now
+        expires_at: API_SESSION_EXPIRY.from_now
       )
 
       cookies.signed.permanent[COOKIE_NAME] = {

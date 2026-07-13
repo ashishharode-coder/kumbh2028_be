@@ -16,3 +16,11 @@ SuperAdmin.find_or_create_by!(email: "admin@kumbh2028.com") do |admin|
 
   admin.password_confirmation = "Mahakal2028"
 end
+
+10.times do |i|
+  User.create!(
+    name: "User #{i + 1}",
+    phone: "98765432#{format('%02d', i)}",
+    email: "user#{i + 1}@example.com"
+  )
+end

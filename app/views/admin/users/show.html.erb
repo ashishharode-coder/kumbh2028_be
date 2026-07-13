@@ -1,0 +1,218 @@
+<div class="space-y-6">
+  <% user = User.find(params[:id]) %>
+  <!-- Page Header -->
+  <%= render "status_badge", user: user %>
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold">
+        <%= user.name.presence || "Unnamed User" %>
+      </h1>
+
+      <p class="text-gray-500">
+        <%= user.phone %>
+      </p>
+    </div>
+
+    <div class="flex gap-2">
+      <%= link_to "Edit",
+          edit_admin_user_path(user),
+          class: "rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
+    </div>
+    <div >
+      <% if user.active? %>
+        <%= button_to "Block User",
+          block_admin_user_path(user),
+          method: :patch,
+          class: "rounded bg-red-600 px-4 py-2 text-white" %>
+      <% else %>
+        <%= button_to "Unblock User",
+        unblock_admin_user_path(user),
+        method: :patch,
+        class: "rounded bg-green-600 px-4 py-2 text-white" %>
+      <% end %>
+    </div>
+    <div>
+      <%= button_to "Force Logout",
+      logout_everywhere_admin_user_path(user),
+      method: :delete,
+      class: "rounded bg-orange-600 px-4 py-2 text-white" %>
+    </div>
+  </div>
+
+  <!-- Basic Information -->
+  <div class="rounded-xl bg-white shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">
+      Basic Information
+    </h2>
+
+    <div class="grid grid-cols-2 gap-6">
+
+      <div>
+        <p class="text-sm text-gray-500">Name</p>
+        <p><%= user.name %></p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Phone</p>
+        <p><%= user.phone %></p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Email</p>
+        <p><%= user.email.presence || "-" %></p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Status</p>
+        <p>
+          <%= user.status.titleize %>
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Registered On</p>
+        <p><%= l user.created_at, format: :long %></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Authentication -->
+  <div class="rounded-xl bg-white shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">
+      Authentication
+    </h2>
+
+    <div class="grid grid-cols-2 gap-6">
+
+      <div>
+        <p class="text-sm text-gray-500">Last Login</p>
+        <p>
+          <%= user.last_login_at || "Never" %>
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Active Sessions</p>
+        <p>
+          <%= user.active_sessions_count %>
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Total Sessions</p>
+        <p>
+          <%= user.total_sessions_count %>
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">OTP Requests</p>
+        <p>
+          <%= user.otp_requests_count %>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="rounded-xl bg-white shadow p-6 mt-6">
+
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-semibold">
+        Active Sessions
+      </h2>
+
+      <span class="rounded-full bg-orange-100 px-3 py-1 text-orange-700">
+        <%= user.active_sessions_count %>
+      </span>
+    </div>
+
+    <table class="min-w-full">
+      <thead>
+        <tr class="border-b">
+          <th class="text-left py-3">Device</th>
+          <th class="text-left py-3">Platform</th>
+          <th class="text-left py-3">IP Address</th>
+          <th class="text-left py-3">Last Seen</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% user.recent_sessions.each do |session| %>
+
+          <tr class="border-b">
+
+            <td class="py-3">
+              <%= session.device_name.presence || "-" %>
+            </td>
+
+            <td>
+              <%= session.platform %>
+            </td>
+
+            <td>
+              <%= session.ip_address %>
+            </td>
+
+            <td>
+              <%= time_ago_in_words(session.last_seen_at) %> ago
+            </td>
+
+            <td class="text-right">
+
+              <%= button_to "Logout",
+                    logout_session_admin_user_path(user, session_id: session.id),
+                    method: :delete,
+                    class: "rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700",
+                    data: {
+                      turbo_confirm: "Terminate this session?"
+                    } %>
+
+            </td>
+
+          </tr>
+
+        <% end %>
+
+      </tbody>
+    </table>
+  </div>
+
+  <% timeline = Admin::UserTimelineService.build(user) %>
+
+  <div class="rounded-xl bg-white shadow p-6 mt-6">
+
+    <h2 class="text-xl font-semibold mb-6">
+      Activity Timeline
+    </h2>
+
+    <% timeline.each do |event| %>
+
+      <div class="flex gap-4 mb-5">
+        <div>
+          🟠
+        </div>
+      <div>
+
+      <div class="font-medium">
+        <%= event[:title] %>
+      </div>
+
+      <div class="text-gray-500">
+        <%= event[:description] %>
+      </div>
+
+      <div class="text-sm text-gray-400">
+        <%= time_ago_in_words(event[:at]) %>
+        ago
+      </div>
+  </div>
+
+</div>
+
+<% end %>
+
+</div>
+
+</div>

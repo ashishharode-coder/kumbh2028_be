@@ -1,0 +1,20 @@
+<% case user.status %>
+<% when "active" %>
+
+<span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+  ● Active
+</span>
+
+<% when "blocked" %>
+
+<span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+  ● Blocked
+</span>
+
+<% else %>
+
+<span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+  ● Unknown
+</span>
+
+<% end %>
