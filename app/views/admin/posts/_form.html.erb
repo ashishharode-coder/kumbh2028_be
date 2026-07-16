@@ -1,0 +1,260 @@
+<% requested_resource = Post.find(params[:id]) %>
+
+<%= form_with(
+      model: [:admin, requested_resource],
+      local: true,
+      multipart: true,
+      class: "space-y-8"
+    ) do |f| %>
+
+  <% if requested_resource.errors.any? %>
+    <div class="rounded-lg border border-red-200 bg-red-50 p-4">
+      <h3 class="mb-2 font-semibold text-red-700">
+        <%= pluralize(requested_resource.errors.count, "error") %> prevented this post from being saved.
+      </h3>
+
+      <ul class="list-disc pl-5 text-sm text-red-700">
+        <% requested_resource.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Basic Information -->
+
+  <div class="rounded-xl bg-white shadow p-6">
+
+    <h2 class="mb-6 text-xl font-semibold">
+      Basic Information
+    </h2>
+
+    <div class="grid grid-cols-2 gap-6">
+
+      <div class="col-span-2">
+        <%= f.label :title, class: "block mb-2 font-medium" %>
+
+        <%= f.text_field :title,
+              class: "w-full rounded-lg border px-4 py-2" %>
+      </div>
+
+      <div class="col-span-2">
+        <%= f.label :description, class: "block mb-2 font-medium" %>
+
+        <%= f.text_area :description,
+              rows: 8,
+              class: "w-full rounded-lg border px-4 py-3" %>
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Post Settings -->
+
+  <div class="rounded-xl bg-white shadow p-6">
+
+    <h2 class="mb-6 text-xl font-semibold">
+      Post Settings
+    </h2>
+
+    <div class="grid grid-cols-3 gap-6">
+
+      <div>
+
+        <%= f.label :post_type, class: "block mb-2 font-medium" %>
+
+        <%= f.select :post_type,
+              Post.post_types.keys.map { |k| [k.titleize, k] },
+              {},
+              class: "w-full rounded-lg border px-4 py-2" %>
+
+      </div>
+
+      <div>
+
+        <%= f.label :status, class: "block mb-2 font-medium" %>
+
+        <%= f.select :status,
+              Post.statuses.keys.map { |k| [k.titleize, k] },
+              {},
+              class: "w-full rounded-lg border px-4 py-2" %>
+
+      </div>
+
+      <div>
+
+        <%= f.label :priority, class: "block mb-2 font-medium" %>
+
+        <%= f.select :priority,
+              Post.priorities.keys.map { |k| [k.titleize, k] },
+              {},
+              class: "w-full rounded-lg border px-4 py-2" %>
+
+      </div>
+
+      <div class="col-span-3">
+
+        <%= f.label :location, class: "block mb-2 font-medium" %>
+
+        <%= f.text_field :location,
+              class: "w-full rounded-lg border px-4 py-2" %>
+
+      </div>
+
+      <div>
+
+        <%= f.label :latitude, class: "block mb-2 font-medium" %>
+
+        <%= f.number_field :latitude,
+              step: 0.0000001,
+              class: "w-full rounded-lg border px-4 py-2" %>
+
+      </div>
+
+      <div>
+
+        <%= f.label :longitude, class: "block mb-2 font-medium" %>
+
+        <%= f.number_field :longitude,
+              step: 0.0000001,
+              class: "w-full rounded-lg border px-4 py-2" %>
+
+      </div>
+
+      <div>
+
+        <%= f.label :published_at, class: "block mb-2 font-medium" %>
+
+        <%= f.datetime_local_field :published_at,
+              class: "w-full rounded-lg border px-4 py-2" %>
+
+      </div>
+
+      <div class="col-span-3">
+
+        <label class="inline-flex items-center gap-2">
+
+          <%= f.check_box :verified %>
+
+          Verified Post
+
+        </label>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Media -->
+
+  <div class="rounded-xl bg-white shadow p-6">
+
+    <h2 class="mb-6 text-xl font-semibold">
+      Media
+    </h2>
+
+    <%= f.file_field :media,
+          multiple: true,
+          class: "w-full rounded-lg border p-3" %>
+
+    <p class="mt-2 text-sm text-gray-500">
+      Images and videos are supported.
+    </p>
+
+    <% if requested_resource.persisted? && requested_resource.media.attached? %>
+
+      <div class="mt-6 grid grid-cols-4 gap-4">
+
+        <% requested_resource.media.each do |file| %>
+
+          <div class="rounded-lg border p-2">
+
+            <% if file.image? %>
+
+              <%= image_tag file.variant(resize_to_limit: [250,250]),
+                    class: "rounded" %>
+
+            <% elsif file.video? %>
+
+              <video controls class="rounded w-full">
+                <source src="<%= url_for(file) %>">
+              </video>
+
+            <% else %>
+
+              <%= link_to file.filename.to_s,
+                    url_for(file),
+                    target: "_blank" %>
+
+            <% end %>
+
+          </div>
+
+        <% end %>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+
+
+  <!-- Statistics -->
+
+  <% if requested_resource.persisted? %>
+
+    <div class="rounded-xl bg-white shadow p-6">
+
+      <h2 class="mb-6 text-xl font-semibold">
+        Statistics
+      </h2>
+
+      <div class="grid grid-cols-4 gap-6">
+
+        <div>
+          <div class="text-sm text-gray-500">Views</div>
+          <div class="text-3xl font-bold"><%= requested_resource.views_count %></div>
+        </div>
+
+        <div>
+          <div class="text-sm text-gray-500">Likes</div>
+          <div class="text-3xl font-bold"><%= requested_resource.likes_count %></div>
+        </div>
+
+        <div>
+          <div class="text-sm text-gray-500">Comments</div>
+          <div class="text-3xl font-bold"><%= requested_resource.comments_count %></div>
+        </div>
+
+        <div>
+          <div class="text-sm text-gray-500">Shares</div>
+          <div class="text-3xl font-bold"><%= requested_resource.shares_count %></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+
+
+  <div class="flex justify-end gap-4">
+
+    <%= link_to "Cancel",
+          admin_posts_path,
+          class: "rounded-lg border px-6 py-2" %>
+
+    <%= f.submit "Save Post",
+          class: "rounded-lg bg-orange-600 px-6 py-2 text-white hover:bg-orange-700" %>
+
+  </div>
+
+<% end %>

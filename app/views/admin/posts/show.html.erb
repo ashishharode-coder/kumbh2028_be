@@ -1,0 +1,310 @@
+<% post = Post.find(params[:id]) %>
+
+<div class="space-y-6">
+
+  <div class="rounded-xl bg-white shadow p-6">
+    <div class="flex justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">
+          <%= post.title.presence || "Untitled Post" %>
+        </h1>
+        <p class="mt-2 text-gray-500">
+          <%= post.location.presence || "-" %>
+        </p>
+      </div>
+
+      <div class="flex gap-3">
+
+        <%= link_to "Edit",
+              edit_admin_post_path(post),
+              class: "rounded bg-blue-600 px-4 py-2 text-white" %>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="rounded-xl bg-white shadow p-6">
+    <h2 class="mb-5 text-xl font-semibold">
+      Information
+    </h2>
+
+    <div class="grid grid-cols-2 gap-6">
+
+      <div>
+        <p class="text-gray-500 text-sm">
+          Status
+        </p>
+
+        <p>
+          <%= post.status.titleize %>
+        </p>
+
+      </div>
+
+      <div>
+        <p class="text-gray-500 text-sm">
+          Post Type
+        </p>
+
+        <p>
+          <%= post.post_type.titleize %>
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500 text-sm">
+          Published
+        </p>
+
+        <p>
+          <%= post.published_at || "-" %>
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500 text-sm">
+          Created
+        </p>
+
+        <p>
+          <%= l(post.created_at, format: :long) %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="rounded-xl bg-white shadow p-6">
+    <h2 class="mb-4 text-xl font-semibold">
+      Description
+    </h2>
+
+    <p class="leading-7 whitespace-pre-wrap">
+      <%= post.description %>
+    </p>
+  </div>
+
+
+
+
+
+
+
+  <div class="rounded-xl bg-white shadow p-6">
+
+    <div class="mb-6 flex items-center justify-between">
+
+      <h2 class="text-xl font-semibold">
+        Media Gallery
+      </h2>
+
+      <span class="rounded bg-gray-100 px-3 py-1 text-sm text-gray-600">
+        <%= pluralize(post.media.count, "Media") %>
+      </span>
+
+    </div>
+
+    <div class="grid grid-cols-3 gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+
+      <% post.media.each do |media| %>
+
+        <div class="overflow-hidden rounded-xl border bg-white shadow-sm">
+
+          <% if media.image? %>
+
+            <%= image_tag(
+                  media.variant(resize_to_limit: [400,400]).processed,
+                  class: "aspect-square w-full object-cover"
+                ) %>
+
+          <% elsif media.video? %>
+
+            <div class="relative">
+
+              <%= image_tag(
+                    media.preview(resize_to_limit: [400,400]).processed,
+                    class: "aspect-square w-full object-cover"
+                  ) %>
+
+              <div class="absolute inset-0 flex items-center justify-center">
+
+                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-black/70 text-3xl text-white">
+
+                  ▶
+
+                </div>
+
+              </div>
+
+              <span class="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-1 text-xs text-white">
+
+                VIDEO
+
+              </span>
+
+            </div>
+
+          <% end %>
+
+          <div class="border-t px-3 py-2">
+
+            <p class="truncate text-sm font-medium">
+              <%= media.filename %>
+            </p>
+
+            <p class="text-xs text-gray-500">
+              <%= number_to_human_size(media.byte_size) %>
+            </p>
+
+          </div>
+
+        </div>
+
+      <% end %>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+  <div class="rounded-xl bg-white shadow p-6">
+    <h2 class="mb-5 text-xl font-semibold">Statistics</h2>
+    <div class="grid grid-cols-4 gap-6">
+      <div>
+        <p class="text-sm text-gray-500">Views</p>
+        <h3 class="text-3xl font-bold"><%= post.views_count %></h3>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Likes</p>
+        <h3 class="text-3xl font-bold"><%= post.likes_count %></h3>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Comments</p>
+        <h3 class="text-3xl font-bold"><%= post.comments_count %></h3>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Shares</p>
+        <h3 class="text-3xl font-bold"><%= post.shares_count %></h3>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ===========================
+     MEDIA PREVIEW MODAL
+=========================== -->
+
+<div
+    id="mediaModal"
+    class="fixed inset-0 z-[9999] hidden items-center justify-center">
+
+    <!-- Backdrop -->
+    <div
+        class="absolute inset-0 bg-black/90"
+        onclick="closeMediaModal()">
+    </div>
+
+    <!-- Close -->
+    <button
+        type="button"
+        onclick="closeMediaModal()"
+        class="absolute right-6 top-6 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-white text-3xl shadow">
+
+        ×
+
+    </button>
+
+    <!-- Dynamic Media -->
+    <div
+        id="modalContent"
+        class="relative z-10 flex items-center justify-center p-8">
+
+    </div>
+
+</div>
+
+<script>
+
+const modal = document.getElementById("mediaModal");
+const modalContent = document.getElementById("modalContent");
+
+function openMediaModal(url, type){
+
+    modalContent.innerHTML = "";
+
+    if(type === "image"){
+
+        modalContent.innerHTML = `
+            <img
+                src="${url}"
+                class="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl object-contain">
+        `;
+
+    }else{
+
+        modalContent.innerHTML = `
+            <video
+                controls
+                autoplay
+                class="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl">
+
+                <source src="${url}">
+
+            </video>
+        `;
+
+    }
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+    document.body.style.overflow = "hidden";
+}
+
+function closeMediaModal(){
+
+    modal.classList.remove("flex");
+    modal.classList.add("hidden");
+
+    modalContent.innerHTML = "";
+
+    document.body.style.overflow = "";
+
+}
+
+modal.addEventListener("click", function(e){
+
+    if(e.target === modal){
+        closeMediaModal();
+    }
+
+});
+
+document.addEventListener("keydown", function(e){
+
+    if(e.key === "Escape"){
+        closeMediaModal();
+    }
+
+});
+
+</script>

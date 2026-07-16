@@ -6,7 +6,8 @@ module Admin
           {
             users: UserMetrics.call,
             sessions: SessionMetrics.call,
-            otps: OtpMetrics.call
+            otps: OtpMetrics.call,
+            posts: PostMetrics.call
           }
         end
       end

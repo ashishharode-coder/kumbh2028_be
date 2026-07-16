@@ -11,7 +11,6 @@ class PostDashboard < Administrate::BaseDashboard
     id: Field::Number,
     description: Field::Text,
     location: Field::String,
-    media: Field::ActiveStorage,
     post_type: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     priority: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     published_at: Field::DateTime,
@@ -31,7 +30,7 @@ class PostDashboard < Administrate::BaseDashboard
     id
     description
     location
-    media
+    
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -40,7 +39,7 @@ class PostDashboard < Administrate::BaseDashboard
     id
     description
     location
-    media
+    
     post_type
     priority
     published_at
@@ -57,7 +56,7 @@ class PostDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     description
     location
-    media
+    
     post_type
     priority
     published_at
