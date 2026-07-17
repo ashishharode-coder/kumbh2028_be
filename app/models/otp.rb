@@ -15,6 +15,11 @@ class Otp < ApplicationRecord
     where(created_at: Date.current.all_day)
   }
 
+  scope :active, -> {
+    where(verified_at: nil)
+      .where("expires_at > ?", Time.current)
+  }
+
   def status
     return "Verified" if verified?
 

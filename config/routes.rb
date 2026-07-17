@@ -25,6 +25,11 @@ Rails.application.routes.draw do
         post :verify_otp
       end
 
+      resources :posts
+
+      get "my/posts",
+        to: "posts#my_posts"
+
       get "me", to: "users#me"
       delete "logout", to: "users#logout"
     end

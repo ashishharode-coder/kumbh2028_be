@@ -3,12 +3,13 @@ module ApiResponse
 
   private
 
-  def success(message: "Success", data: nil, status: :ok)
+  def success(message: "Success", data: nil, meta: {}, status: :ok)
     render json: {
       success: true,
       message: message,
       errors: {},
-      data: data
+      data: data,
+      meta: meta
     }, status: status
   end
 
@@ -17,7 +18,8 @@ module ApiResponse
       success: false,
       message: message,
       errors: errors,
-      data: nil
+      data: nil,
+      meta: {}
     }, status: status
   end
 end

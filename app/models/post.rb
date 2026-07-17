@@ -1,7 +1,6 @@
 class Post < ApplicationRecord
   belongs_to :user
 
-
   has_many_attached :media do |attachable|
     attachable.variant :thumb, resize_to_limit: [300, 300]
     attachable.variant :medium, resize_to_limit: [800, 800]
@@ -22,7 +21,8 @@ class Post < ApplicationRecord
     draft: 0,
     published: 1,
     archived: 2,
-    rejected: 3
+    rejected: 3,
+    pending: 4
   }
 
   enum :priority, {
@@ -32,6 +32,9 @@ class Post < ApplicationRecord
     critical: 3
   }
 
+  scope :active, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
+
   scope :recent, -> {
     order(created_at: :desc)
   }
@@ -39,5 +42,9 @@ class Post < ApplicationRecord
   scope :today, -> {
     where(created_at: Date.current.all_day)
   }
+
+  def deleted?
+    deleted_at.present?
+  end
 
 end

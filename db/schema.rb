@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_13_141050) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_17_125700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -85,6 +85,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_13_141050) do
     t.integer "views_count", default: 0
     t.decimal "latitude", precision: 10, scale: 7
     t.decimal "longitude", precision: 10, scale: 7
+    t.bigint "user_id"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_posts_on_deleted_at"
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -126,4 +130,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_13_141050) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "api_sessions", "users"
   add_foreign_key "otps", "users"
+  add_foreign_key "posts", "users"
 end
