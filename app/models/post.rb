@@ -1,5 +1,8 @@
 class Post < ApplicationRecord
   belongs_to :user
+  has_many :comments, dependent: :destroy
+  has_many :likes, dependent: :destroy
+
 
   has_many_attached :media do |attachable|
     attachable.variant :thumb, resize_to_limit: [300, 300]
@@ -45,6 +48,12 @@ class Post < ApplicationRecord
 
   def deleted?
     deleted_at.present?
+  end
+
+  def self.liked?(post, current_user)
+    return false unless current_user
+
+    post.likes.any? { |like| like.user_id == current_user.id }
   end
 
 end

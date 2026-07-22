@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_17_125700) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_22_102821) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -55,6 +55,30 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_17_125700) do
     t.datetime "updated_at", null: false
     t.index ["token"], name: "index_api_sessions_on_token", unique: true
     t.index ["user_id"], name: "index_api_sessions_on_user_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "parent_id"
+    t.text "content"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_comments_on_deleted_at"
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+    t.index ["post_id"], name: "index_comments_on_post_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_likes_on_post_id"
+    t.index ["user_id", "post_id"], name: "index_likes_on_user_id_and_post_id", unique: true
+    t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
   create_table "otps", force: :cascade do |t|
@@ -129,6 +153,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_17_125700) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "api_sessions", "users"
+  add_foreign_key "comments", "comments", column: "parent_id"
+  add_foreign_key "comments", "posts"
+  add_foreign_key "comments", "users"
+  add_foreign_key "likes", "posts"
+  add_foreign_key "likes", "users"
   add_foreign_key "otps", "users"
   add_foreign_key "posts", "users"
 end

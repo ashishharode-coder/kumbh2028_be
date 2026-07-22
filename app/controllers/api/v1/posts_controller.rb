@@ -123,6 +123,20 @@ module Api
         end
       end
 
+      def liked
+        result = LikedPostsQuery.new(
+          user: current_user,
+          params: params
+        ).call
+
+        success(
+          data: PostsSerializer.render(
+            result.data
+          ),
+          meta: result.meta
+        )
+      end
+
       private
 
       def post_params

@@ -25,7 +25,15 @@ Rails.application.routes.draw do
         post :verify_otp
       end
 
-      resources :posts
+      resources :posts do
+        collection do
+          get :liked
+        end
+        resources :comments, only: %i[create index]
+        resource :like, only: [:create, :destroy]
+      end
+
+      resources :comments, only: %i[update destroy]
 
       get "my/posts",
         to: "posts#my_posts"

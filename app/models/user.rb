@@ -2,6 +2,9 @@ class User < ApplicationRecord
   has_many :otps, dependent: :destroy
   has_many :api_sessions, dependent: :destroy
   has_many :posts, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  has_many :likes, dependent: :destroy
+
 
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
