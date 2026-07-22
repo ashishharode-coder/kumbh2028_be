@@ -2,6 +2,8 @@ class Post < ApplicationRecord
   belongs_to :user
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
+  has_many :bookmarks, dependent: :destroy
+
 
 
   has_many_attached :media do |attachable|
@@ -55,5 +57,7 @@ class Post < ApplicationRecord
 
     post.likes.any? { |like| like.user_id == current_user.id }
   end
+
+
 
 end

@@ -22,8 +22,13 @@ class PostsQuery < BaseQuery
 
   def base_scope
     Post.active
-        .includes(:user, media_attachments: :blob)
-        .left_joins(:likes)
-        .order(created_at: :desc)
+    .includes(
+      :user,
+      :comments,
+      :likes,
+      :bookmarks,
+      media_attachments: :blob
+    )
+    .order(created_at: :desc)
   end
 end

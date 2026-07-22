@@ -1,12 +1,13 @@
 class PostSerializer
   include Rails.application.routes.url_helpers
 
-  def self.render(post)
+  def self.render(post, user: nil)
     new(post).render
   end
 
-  def initialize(post)
+  def initialize(post, user: nil)
     @post = post
+    @user = user
   end
 
   def render
@@ -31,6 +32,7 @@ class PostSerializer
       views_count: @post.views_count,
 
       published_at: @post.published_at,
+      bookmarked_by_current_user: bookmarked_by_current_user?(@post, @user),
 
       user: user_json,
 
@@ -42,6 +44,9 @@ class PostSerializer
   end
 
   private
+
+  attr_reader :post, :user
+
 
   def user_json
     return nil unless @post.user
@@ -62,6 +67,14 @@ class PostSerializer
         byte_size: file.byte_size,
         url: rails_blob_url(file)
       }
+    end
+  end
+
+  def bookmarked_by_current_user?(post, current_user)
+    return false unless current_user
+
+    post.bookmarks.any? do |bookmark|
+      bookmark.user_id == current_user.id
     end
   end
 end

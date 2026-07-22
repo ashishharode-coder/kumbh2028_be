@@ -8,7 +8,7 @@ module Api
 
         success(
           message: "Posts fetched successfully.",
-          data: PostsSerializer.render(result.data),
+          data: PostsSerializer.render(result.data, user: current_user),
           meta: result.meta
         )
       end
@@ -19,7 +19,7 @@ module Api
         if result.success?
           success(
             message: "Post fetched successfully.",
-            data: PostSerializer.render(result.data)
+            data: PostSerializer.render(result.data, user: current_user)
           )
         else
           failure(
@@ -37,7 +37,7 @@ module Api
 
         success(
           message: "Posts fetched successfully.",
-          data: PostsSerializer.render(result.data),
+          data: PostsSerializer.render(result.data, user: current_user),
           meta: result.meta
         )
       end
@@ -52,7 +52,7 @@ module Api
         if result.success?
           success(
             message: "Post created successfully.",
-            data: PostSerializer.render(result.data),
+            data: PostSerializer.render(result.data, user: current_user),
             status: :created
           )
         else
@@ -88,7 +88,7 @@ module Api
         if result.success?
           success(
             message: result.message,
-            data: PostSerializer.render(result.data)
+            data: PostSerializer.render(result.data, user: current_user)
           )
         else
           failure(
@@ -131,7 +131,23 @@ module Api
 
         success(
           data: PostsSerializer.render(
-            result.data
+            result.data,
+            user: current_user
+          ),
+          meta: result.meta
+        )
+      end
+
+      def bookmarked
+        result = BookmarkedPostsQuery.new(
+          user: current_user,
+          params: params
+        ).call
+
+        success(
+          data: PostsSerializer.render(
+            result.data,
+            user: current_user
           ),
           meta: result.meta
         )

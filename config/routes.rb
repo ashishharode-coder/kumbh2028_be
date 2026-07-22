@@ -28,9 +28,11 @@ Rails.application.routes.draw do
       resources :posts do
         collection do
           get :liked
+          get :bookmarked
         end
         resources :comments, only: %i[create index]
         resource :like, only: [:create, :destroy]
+        resource :bookmark, only: %i[create destroy]
       end
 
       resources :comments, only: %i[update destroy]
